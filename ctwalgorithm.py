@@ -61,7 +61,7 @@ def ctwalgorithm(x, Nx, D):
         countTree[xt,leafindex-1] = countTree[xt,leafindex-1] + 1
         node = np.floor((leafindex+Nx-2)/Nx)
 
-        while node!=0:
+        while node != 0:
             countTree, betaTree, eta = ctwupdate(countTree, betaTree, eta, node, xt, 1/2)
             node = np.floor((node+Nx-2)/Nx)
 

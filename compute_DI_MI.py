@@ -53,7 +53,10 @@ def compute_DI_MI(X, Y, Nx, D, start_ratio, prob=None, flag, MI=True):
             tmp2 = np.multiply(py[iy,:], px_xy[ix,:])
             temp_DI = temp_DI + np.multiply( tmp1, np.log2(np.divide(tmp1,tmp2)) )
     DI = np.cumsum(temp_DI[int(np.floor(n_data*start_ratio)):])
-    return DI
+    # Todo
+    rev_DI = None
+    MI = None
+    return DI, rev_DI, MI
 
 
 # Function 'compute_mat_px' uses the CTW algorithm to find a universal
@@ -62,11 +65,29 @@ def compute_DI_MI(X, Y, Nx, D, start_ratio, prob=None, flag, MI=True):
 # X: matrix of input sequences
 # Nx: Alphabet size of X
 # D: Depth of the CTW Algorithm tree
-def compute_px(Xn Nx, D):
+def compute_mat_px(X, Nx, D):
     Px = []
     for i in tqdm(range(len(X))):
         Px.append(ctwalgorithm(X[i], Nx, D))   # 2x8
     return Px
+
+
+# Function 'compute_mat_pxy' uses the CTW algorithm to find a universal
+# probability assignment for each pair of rows of X
+# Inputs:
+# X: matrix of input sequences
+# Nx: Alphabet size of X
+# D: Depth of the CTW Algorithm tree
+def compute_mat_pxy(X, Nx, D):
+    n = len(X)
+    Pxy = np.zeros((n,n))
+    for i in tqdm(range(n)):
+        for j in tqdm(range(n)):
+            if i == j:
+                continue
+            XY=X[i]+Nx*X[j]
+            Pxy[i,j] = ctwalgorithm(XY, Nx**2, D)
+    return Pxy
 
 
 # Function 'compute_DI_mat' takes in a matrix X and computes pairwise directed
@@ -80,7 +101,10 @@ def compute_DI_mat(X, Nx, D, start_ratio, MI=False):
     X = np.array(X)
     DI = np.zeros((X.shape[0], X.shape[0]))
     Px = compute_mat_px(X, Nx, D)
+    Pxy = compute_mat_pxy(X, Nx, D)
     for i in tqdm(range(len(X))):
         for j in range(len(X)):
-            DI[i][j] = compute_DI_MI(X[i], X[j], Nx, D, start_ratio, prob=[Px[i],Px[j]] MI=MI)[-1]
+            prob = [ Px[i],Px[j], Pxy[i,j] ]
+            di, rev_di, mi = compute_DI_MI(X[i], X[j], Nx, D, start_ratio, prob=prob, MI=MI)
+            DI[i,j] = di[-1]
     return DI
