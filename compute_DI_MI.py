@@ -12,6 +12,7 @@
 import numpy as np
 from tqdm import tqdm
 from ctwalgorithm import ctwalgorithm
+from ctwentropy import ctwentropy
 
 
 # Function 'compute_DI_MI' calculates the directed information I(X^n--> Y^n),
@@ -54,7 +55,9 @@ def compute_DI_MI(X, Y, Nx, D, alg, start_ratio, prob=None):
         print("Not yet implemented")
 
     elif alg == "E2":
-        print("Not yet implemented")
+        temp_MI = ctwentropy(px) + ctwentropy(py) - ctwentropy(pxy)
+        temp_DI = ctwentropy(py) - ctwentropy(pxy) + ctwentropy(px_xy)
+        temp_rev_DI = ctwentropy(px) - ctwentropy(px_xy)
 
     elif alg == "E3":
         print("Not yet implemented")
