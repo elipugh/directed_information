@@ -51,9 +51,15 @@ def compute_DI_MI(X, Y, Nx, D, alg, start_ratio, prob=None):
     temp= np.tile(px_xy, (Nx,1))
     py_x_xy = np.divide(pxy, temp)
 
+    # not tested yet
     if alg == "E1":
-        print("Not yet implemented")
+        rpx = np.arange(1,Nx,len(px)-Nx+2)
+        rpxy = np.arange(1,Nx**2,len(px)-Nx**2+2)
+        temp_MI = -np.log2(px[X[D:]+rpx]) - np.log2(py[Y[D:]+rpx]) + np.log2(pxy[XY[D:]+rpxy])
+        temp_DI = -np.log2(py[Y[D:]+rpx]) + np.log2(pxy[XY[D:]+rpxy]) - np.log2(px_xy[X[D:]+rpx])
+        temp_rev_DI = -np.log2(px[X[D:]+rpx]) + np.log2(px_xy[X[D:]+rpx])
 
+    # not tested yet
     elif alg == "E2":
         temp_MI = ctwentropy(px) + ctwentropy(py) - ctwentropy(pxy)
         temp_DI = ctwentropy(py) - ctwentropy(pxy) + ctwentropy(px_xy)
