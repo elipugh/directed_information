@@ -126,7 +126,7 @@ def compute_mat_pxy(X, Nx, D):
 # X: matrix of input sequences
 # Nx: Alphabet size of X
 # D: Depth of the CTW Algorithm tree
-def compute_DI_MI_mat(X, Nx, D, start_ratio, MI=False):
+def compute_DI_MI_mat(X, Nx, D, start_ratio, alg):
     X = np.array(X)
     DI = np.zeros((X.shape[0], X.shape[0]))
     rev_DI = np.zeros((X.shape[0], X.shape[0]))
@@ -136,7 +136,7 @@ def compute_DI_MI_mat(X, Nx, D, start_ratio, MI=False):
     for i in tqdm(range(len(X))):
         for j in range(len(X)):
             prob = ( Px[i],Px[j], Pxy[i,j] )
-            di, rev_di, mi = compute_DI_MI(X[i], X[j], Nx, D, start_ratio, prob=prob)
+            di, rev_di, mi = compute_DI_MI(X[i], X[j], Nx, D, start_ratio, prob=prob, alg=alg)
             DI[i,j] = di[-1]
             rev_DI[i,j] = rev_di[-1]
             MI[i,j] = mi[-1]
