@@ -10,18 +10,16 @@
 ###################################################################
 
 import numpy as np
-import time
 from tqdm import tqdm
 
 # Function 'ctwupdate' is an update step in the CTW Algorithm
 # Inputs:
 # countTree:  countTree[a,:] is the tree for the count of symbol a a=0,...,M
 # betaTree:   betaTree[i(s) ] =  Pe^s / \prod_{b=0}^{M} Pw^{bs}(x^{t})
-# eta = [ p(X_t = 0|.) / p(X_t = M|.), ..., p(X_t = M-1|.) / p(X_t = M|.)
-# calculate eta and update beta a, b
-# xt is the current data
+# eta: [ p(X_t = 0|.) / p(X_t = M|.), ..., p(X_t = M-1|.) / p(X_t = M|.)
+# xt: the current data
 def ctwupdate(countTree, betaTree, eta, index, xt, alpha):
-    # size of the alphbet
+    # size of the alphabet
     Nx = len(eta)
     pw = eta
     pw = pw/np.sum(pw)  # pw(1) pw(2) .. pw(M+1)
