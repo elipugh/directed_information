@@ -7,3 +7,6 @@ Python3 implementation of the universal directed information estimators in Jiant
 See here: [http://arxiv.org/abs/1201.2334](http://arxiv.org/abs/1201.2334)
 
 Also see [MATLAB implementation](https://github.com/EEthinker/Universal_directed_information)
+
+## Authors
+Eli Pugh, Ethan Shen
