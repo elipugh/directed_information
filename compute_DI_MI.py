@@ -82,9 +82,13 @@ def compute_DI_MI(X, Y, Nx, D, alg, start_ratio, prob=None):
         fpy = py.flatten("F")
         fpxy = pxy.flatten("F")
         fpx_xy = px_xy.flatten("F")
-        temp_MI = -np.log2(fpx[np.add(X[D:],rpx)]) - np.log2(fpy[np.add(Y[D:],rpx)]) + np.log2(fpxy[np.add(XY[D:],rpxy)])
-        temp_DI = -np.log2(fpy[Y[D:]+rpx]) + np.log2(fpxy[XY[D:]+rpxy]) - np.log2(fpx_xy[X[D:]+rpx])
-        temp_rev_DI = -np.log2(fpx[X[D:]+rpx]) + np.log2(fpx_xy[X[D:]+rpx])
+        tmp1 = np.log2(fpx[np.add(X[D:],rpx)])
+        tmp2 = np.log2(fpy[np.add(Y[D:],rpx)])
+        tmp3 = np.log2(fpxy[np.add(XY[D:],rpxy)])
+        tmp4 = np.log2(fpx_xy[X[D:]+rpx])
+        temp_MI = -tmp1 - tmp2 + tmp3
+        temp_DI = -tmp1 + tmp3 - tmp4
+        temp_rev_DI = -tmp1 + tmp4
 
     elif alg == "E2":
         temp_MI = ctwentropy(px) + ctwentropy(py) - ctwentropy(pxy)
@@ -120,15 +124,16 @@ def compute_DI_MI(X, Y, Nx, D, alg, start_ratio, prob=None):
             for ix in range(Nx):
                 tmp1 = pxy[ix+iy*Nx,:]
                 tmp2 = np.multiply(py[iy,:], px_xy[ix,:])
-                temp_DI += np.multiply( tmp1, np.log2(np.divide(tmp1,tmp2)) )
                 tmp3 = np.multiply(py[iy,:], px[ix,:])
-                temp_MI += np.multiply( tmp1, np.log2(np.divide(tmp1,tmp3)) )
                 tmp4 = np.divide( px_xy[ix,:], px[ix,:] )
+                temp_DI += np.multiply( tmp1, np.log2(np.divide(tmp1,tmp2)) )
+                temp_MI += np.multiply( tmp1, np.log2(np.divide(tmp1,tmp3)) )
                 temp_rev_DI += np.multiply( tmp1, np.log2(tmp4) )
 
     DI = np.cumsum(temp_DI[int(np.floor(n_data*start_ratio)):])
     rev_DI = np.cumsum(temp_rev_DI[int(np.floor(n_data*start_ratio)):])
-    # MI = np.cumsum(temp_MI[int(np.floor(n_data*start_ratio)):])
-    MI = DI+rev_DI
+    MI = np.cumsum(temp_MI[int(np.floor(n_data*start_ratio)):])
+    # another option:
+    # MI = DI+rev_DI
     return DI, rev_DI, MI
 
