@@ -33,7 +33,13 @@ def compute_DI_MI(X, Y, Nx, D, alg, start_ratio, prob=None):
     X = np.array(X)
     Y = np.array(Y)
     assert X.shape == Y.shape
+    assert X.ndim == 1
+    assert Y.ndim == 1
     assert alg in set(["E1", "E2", "E3", "E4"])
+    if prob != None:
+        assert len(prob) == 3
+        # need to add assertion of
+        # prob[0], prob[1], prob[2].shape
 
     XY=X+Nx*Y
     n_data = len(X)
@@ -44,6 +50,9 @@ def compute_DI_MI(X, Y, Nx, D, alg, start_ratio, prob=None):
         pxy = ctwalgorithm(XY, Nx**2, D)
     else:
         px, py, pxy = prob
+        px = np.array(px)
+        py = np.array(py)
+        pxy = np.array(pxy)
 
     # px_xy calculates p(x_i|x^{i-1},y^{i-1})
     px_xy = np.zeros((Nx,n_data-D))
