@@ -14,7 +14,7 @@ from tqdm import tqdm
 from ctwalgorithm import ctwalgorithm
 from ctwentropy import ctwentropy
 
-
+#==============================================================================
 # Function 'compute_DI_MI' calculates the directed information I(X^n--> Y^n),
 # mutual information I(X^n; Y^n) and reverse directed information I(Y^{n-1}-->X^n)
 # for any positive integer n smaller than the length of X and Y.
@@ -29,30 +29,34 @@ from ctwentropy import ctwentropy
 #   displaying the estimated results, for example, if start_ratio = 0.2, then the output DI
 #   only contains the estimate of I(X^n \to Y^n) for n larger than length(X)/5.
 # prob: universal probability assignments, should be an array or tuple (px,py,pxy)
+
 def compute_DI_MI(X, Y, Nx, D, alg, start_ratio, prob=None):
+
     X = np.array(X)
     Y = np.array(Y)
     assert X.shape == Y.shape
     assert X.ndim == 1
     assert Y.ndim == 1
     assert alg in set(["E1", "E2", "E3", "E4"])
-    if prob != None:
-        assert len(prob) == 3
-        # need to add assertion of
-        # prob[0], prob[1], prob[2].shape
-
     XY=X+Nx*Y
     n_data = len(X)
 
-    if prob  == None:
-        px = ctwalgorithm(X, Nx, D)
-        py = ctwalgorithm(Y, Nx, D)
-        pxy = ctwalgorithm(XY, Nx**2, D)
-    else:
+    if prob  != None:
+        assert len(prob) == 3
         px, py, pxy = prob
         px = np.array(px)
         py = np.array(py)
         pxy = np.array(pxy)
+        assert px.shape == (Nx,n_data-D)
+        assert px.shape == py.shape
+        assert pxy.shape == (Nx**2,n_data-D)
+    else:
+        px = ctwalgorithm(X, Nx, D)
+        py = ctwalgorithm(Y, Nx, D)
+        pxy = ctwalgorithm(XY, Nx**2, D)
+        assert px.shape == (Nx,n_data-D)
+        assert px.shape == py.shape
+        assert pxy.shape == (Nx**2,n_data-D)
 
     # px_xy calculates p(x_i|x^{i-1},y^{i-1})
     px_xy = np.zeros((Nx,n_data-D))
@@ -65,7 +69,12 @@ def compute_DI_MI(X, Y, Nx, D, alg, start_ratio, prob=None):
     temp= np.tile(px_xy, (Nx,1))
     py_x_xy = np.divide(pxy, temp)
 
-    # not tested yet
+    #======================================
+    # E1,E2,E3,E4 descriptions found  on
+    # page 5, equations (35) to (38)
+    # https://arxiv.org/pdf/1201.2334.pdf
+    #======================================
+
     if alg == "E1":
         rpx = np.arange(0, px.size-Nx+1, Nx)
         rpxy = np.arange(0,pxy.size-Nx**2+1, Nx**2)
@@ -77,7 +86,6 @@ def compute_DI_MI(X, Y, Nx, D, alg, start_ratio, prob=None):
         temp_DI = -np.log2(fpy[Y[D:]+rpx]) + np.log2(fpxy[XY[D:]+rpxy]) - np.log2(fpx_xy[X[D:]+rpx])
         temp_rev_DI = -np.log2(fpx[X[D:]+rpx]) + np.log2(fpx_xy[X[D:]+rpx])
 
-    # not tested yet
     elif alg == "E2":
         temp_MI = ctwentropy(px) + ctwentropy(py) - ctwentropy(pxy)
         temp_DI = ctwentropy(py) - ctwentropy(pxy) + ctwentropy(px_xy)
@@ -118,15 +126,9 @@ def compute_DI_MI(X, Y, Nx, D, alg, start_ratio, prob=None):
                 tmp4 = np.divide( px_xy[ix,:], px[ix,:] )
                 temp_rev_DI += np.multiply( tmp1, np.log2(tmp4) )
 
-    else:
-        print("Algorithm should be \"E1\", \"E2\", \"E3\", or \"E4\".")
-        print(alg, "is not a choice")
-
-
     DI = np.cumsum(temp_DI[int(np.floor(n_data*start_ratio)):])
     rev_DI = np.cumsum(temp_rev_DI[int(np.floor(n_data*start_ratio)):])
     # MI = np.cumsum(temp_MI[int(np.floor(n_data*start_ratio)):])
     MI = DI+rev_DI
     return DI, rev_DI, MI
-
 
