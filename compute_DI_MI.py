@@ -75,14 +75,25 @@ def compute_DI_MI(X, Y, Nx, D, alg, start_ratio, prob=None):
         temp_rev_DI = ctwentropy(px) - ctwentropy(px_xy)
 
     elif alg == "E3":
-        temp_MI = np.zeros((1,len(px)))
-        temp_DI = np.zeros((1,len(px)))
-        temp_rev_di = np.zeros((1,len(px)))
+        temp_MI = np.zeros(px.shape[1])
+        temp_DI = np.zeros(px.shape[1])
+        temp_rev_DI = np.zeros(px.shape[1])
+        rpy_x_xy = np.arange(0, py_x_xy.size-Nx**2+1, Nx**2)
+        rpx = rpx = np.arange(0, px.size-Nx+1, Nx)
+        fpx = px.flatten("F")
+        fpy = py.flatten("F")
+        fpy_x_xy = py_x_xy.flatten("F")
+        fpxy = pxy.flatten("F")
         for iy in range(Nx):
-            tmp1 = py_x_xy[ X[D:]+(iy-1)*Nx+np.arange(1,len(py_x_xy)-Nx^2+1, Nx**2) ]
-            temp_MI +=
-            temp_DI +=
-            temp_rev_DI +=
+            tmp1 = fpy_x_xy[ X[D:]+(iy)*Nx+rpy_x_xy ]
+            tmp2 = fpxy[ X[D:]+(iy)*Nx+rpy_x_xy ]
+            tmp3 = py[iy,:]
+            tmp4 = fpx[ X[D:]+rpx ]
+            tmp5 = px_xy[iy,:]
+            tmp6 = px[iy,:]
+            temp_MI += np.multiply(tmp1,np.log2(np.divide(tmp2,np.multiply(tmp3,tmp4))))
+            temp_DI += np.multiply(tmp1,np.log2(np.divide(tmp1,tmp3)))
+            temp_rev_DI += np.multiply(tmp5,np.log2(np.divide(tmp5,tmp6)))
 
     elif alg == "E4":
         temp_DI = np.zeros((1,px.shape[1]))
