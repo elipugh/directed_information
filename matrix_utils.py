@@ -13,25 +13,28 @@ from ctwalgorithm import ctwalgorithm
 from ctwentropy import ctwentropy
 from compute_DI_MI import compute_DI_MI
 
+#==============================================================================
 # Function 'compute_mat_px' uses the CTW algorithm to find a universal
 # probability assignment for each row of X
 # Inputs:
 # X: matrix of input sequences
 # Nx: Alphabet size of X
 # D: Depth of the CTW Algorithm tree
+
 def compute_mat_px(X, Nx, D):
     Px = []
     for i in tqdm(range(len(X))):
         Px.append(ctwalgorithm(X[i], Nx, D))   # 2x8
     return Px
 
-
+#==============================================================================
 # Function 'compute_mat_pxy' uses the CTW algorithm to find a universal
 # probability assignment for each pair of rows of X
 # Inputs:
 # X: matrix of input sequences
 # Nx: Alphabet size of X
 # D: Depth of the CTW Algorithm tree
+
 def compute_mat_pxy(X, Nx, D):
     n = len(X)
     Pxy = np.zeros((n,n))
@@ -43,14 +46,15 @@ def compute_mat_pxy(X, Nx, D):
             Pxy[i,j] = ctwalgorithm(XY, Nx**2, D)
     return Pxy
 
-
-# Function 'compute_DI_mat' takes in a matrix X and computes pairwise directed
-# information between each of the rows of X
+#==============================================================================
+# Function 'compute_DI_mat' takes in a matrix X and computes pairwise
+# directed information between each of the rows of X
 # DI[i,j] is the directed information I(X[i]->X[j])
 # Inputs:
 # X: matrix of input sequences
 # Nx: Alphabet size of X
 # D: Depth of the CTW Algorithm tree
+
 def compute_DI_MI_mat(X, Nx, D, start_ratio, alg):
     X = np.array(X)
     DI = np.zeros((X.shape[0], X.shape[0]))
@@ -66,3 +70,4 @@ def compute_DI_MI_mat(X, Nx, D, start_ratio, alg):
             rev_DI[i,j] = rev_di[-1]
             MI[i,j] = mi[-1]
     return DI, rev_DI, MI
+
