@@ -12,12 +12,14 @@
 import numpy as np
 from tqdm import tqdm
 
+#==============================================================================
 # Function 'ctwupdate' is an update step in the CTW Algorithm
 # Inputs:
 # countTree:  countTree[a,:] is the tree for the count of symbol a a=0,...,M
 # betaTree:   betaTree[i(s) ] =  Pe^s / \prod_{b=0}^{M} Pw^{bs}(x^{t})
 # eta: [ p(X_t = 0|.) / p(X_t = M|.), ..., p(X_t = M-1|.) / p(X_t = M|.)
 # xt: the current data
+
 def ctwupdate(countTree, betaTree, eta, index, xt, alpha):
     # size of the alphabet
     Nx = len(eta)
@@ -34,13 +36,14 @@ def ctwupdate(countTree, betaTree, eta, index, xt, alpha):
     betaTree[index-1] = betaTree[index-1] * pe[xt]/pw[xt]
     return countTree, betaTree, eta
 
-
+#==============================================================================
 # Function 'ctwalgorithm' outputs the universal sequential probability
 # assignments given by the Context Tree Weighting Algorithm
 # Inputs:
 # X: Input sequence
 # Nx: Alphabet size of X
 # D: depth of the tree
+
 def ctwalgorithm(x, Nx, D):
     n = len(x)
     countTree = np.zeros( ( Nx, (Nx**(D+1) - 1) // (Nx-1) ))
@@ -48,7 +51,6 @@ def ctwalgorithm(x, Nx, D):
     Px_record = np.zeros((Nx,n-D))
     indexweight = Nx**np.arange(D)
     offset = (Nx**D - 1) // (Nx-1) + 1
-
     for i in range(n-D):
         context = x[i:i+D]
         leafindex = np.dot(context,indexweight)+offset
@@ -58,12 +60,10 @@ def ctwalgorithm(x, Nx, D):
         # update the leaf
         countTree[xt,leafindex-1] = countTree[xt,leafindex-1] + 1
         node = np.floor((leafindex+Nx-2)/Nx)
-
         while node != 0:
             countTree, betaTree, eta = ctwupdate(countTree, betaTree, eta, node, xt, 1/2)
             node = np.floor((node+Nx-2)/Nx)
-
         eta_sum = np.sum(eta[:-1])+1
-
         Px_record[:,i] = eta / eta_sum
     return Px_record
+
