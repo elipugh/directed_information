@@ -53,11 +53,15 @@ def compute_DI_MI(X, Y, Nx, D, alg, start_ratio, prob=None):
 
     # not tested yet
     if alg == "E1":
-        rpx = np.arange(1,Nx,len(px)-Nx+2)
-        rpxy = np.arange(1,Nx**2,len(px)-Nx**2+2)
-        temp_MI = -np.log2(px[X[D:]+rpx]) - np.log2(py[Y[D:]+rpx]) + np.log2(pxy[XY[D:]+rpxy])
-        temp_DI = -np.log2(py[Y[D:]+rpx]) + np.log2(pxy[XY[D:]+rpxy]) - np.log2(px_xy[X[D:]+rpx])
-        temp_rev_DI = -np.log2(px[X[D:]+rpx]) + np.log2(px_xy[X[D:]+rpx])
+        rpx = np.arange(0, px.size-Nx+1, Nx)
+        rpxy = np.arange(0,pxy.size-Nx**2+1, Nx**2)
+        fpx = px.flatten("F")
+        fpy = py.flatten("F")
+        fpxy = pxy.flatten("F")
+        fpx_xy = px_xy.flatten("F")
+        temp_MI = -np.log2(fpx[np.add(X[D:],rpx)]) - np.log2(fpy[np.add(Y[D:],rpx)]) + np.log2(fpxy[np.add(XY[D:],rpxy)])
+        temp_DI = -np.log2(fpy[Y[D:]+rpx]) + np.log2(fpxy[XY[D:]+rpxy]) - np.log2(fpx_xy[X[D:]+rpx])
+        temp_rev_DI = -np.log2(fpx[X[D:]+rpx]) + np.log2(fpx_xy[X[D:]+rpx])
 
     # not tested yet
     elif alg == "E2":
@@ -66,7 +70,14 @@ def compute_DI_MI(X, Y, Nx, D, alg, start_ratio, prob=None):
         temp_rev_DI = ctwentropy(px) - ctwentropy(px_xy)
 
     elif alg == "E3":
-        print("Not yet implemented")
+        temp_MI = np.zeros((1,len(px)))
+        temp_DI = np.zeros((1,len(px)))
+        temp_rev_di = np.zeros((1,len(px)))
+        for iy in range(Nx):
+            tmp1 = py_x_xy[ X[D:]+(iy-1)*Nx+np.arange(1,len(py_x_xy)-Nx^2+1, Nx**2) ]
+            temp_MI +=
+            temp_DI +=
+            temp_rev_DI +=
 
     elif alg == "E4":
         temp_DI = np.zeros((1,px.shape[1]))
