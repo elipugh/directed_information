@@ -1,4 +1,4 @@
-![](https://img.shields.io/pypi/v/:directed_information.svg)
+![](https://img.shields.io/pypi/v/directed_information.svg?style=plastic)
 # Universal_Directed_Information
 
 Python3 implementation of the universal directed information estimators in Jiantao Jiao, Haim H. Permuter, Lei Zhao, Young-Han Kim, and Tsachy Weissman. "Universal estimation of directed information." IEEE Transactions on Information Theory 59, no. 10 (2013): 6220-6242.
