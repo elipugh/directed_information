@@ -9,9 +9,9 @@
 
 import numpy as np
 from tqdm import tqdm
-from ctwalgorithm import ctwalgorithm
-from ctwentropy import ctwentropy
-from compute_DI_MI import compute_DI_MI
+from .ctwalgorithm import ctwalgorithm
+from .ctwentropy import ctwentropy
+from .compute_DI_MI import compute_DI_MI
 
 #==============================================================================
 # Function 'compute_mat_px' uses the CTW algorithm to find a universal

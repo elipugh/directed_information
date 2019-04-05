@@ -11,8 +11,8 @@
 
 import numpy as np
 from tqdm import tqdm
-from ctwalgorithm import ctwalgorithm
-from ctwentropy import ctwentropy
+from .ctwalgorithm import ctwalgorithm
+from .ctwentropy import ctwentropy
 
 #==============================================================================
 # Function 'compute_DI_MI' calculates the directed information I(X^n--> Y^n),
