@@ -9,7 +9,7 @@ See here: [http://arxiv.org/abs/1201.2334](http://arxiv.org/abs/1201.2334)
 Also see [MATLAB implementation](https://github.com/EEthinker/Universal_directed_information)
 
 ## Authors
-Eli Pugh, Ethan Shen
+[Eli Pugh](https://github.com/elipugh), [Ethan Shen](https://github.com/ezshen)
 
 # Installation
 
