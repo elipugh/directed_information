@@ -16,7 +16,7 @@ Also see [MATLAB implementation](https://github.com/EEthinker/Universal_directed
 ```sh
 pip install directed_information
 ```
-This package currently requires Python 3, [numpy](https://github.com/numpy/numpy), and [tqdm](https://github.com/tqdm/tqdm).
+This package currently requires [Python 3](https://www.python.org/downloads/), [numpy](https://github.com/numpy/numpy), and [tqdm](https://github.com/tqdm/tqdm).
 
 # Usage
 ```python
